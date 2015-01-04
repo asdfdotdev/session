@@ -54,6 +54,7 @@ $session->regenerate();
 ```
 
 Additional examples included in /examples
+
 ----
 ## License
 cl_session is made available under the [GPL](http://www.gnu.org/licenses/gpl-2.0.html).
