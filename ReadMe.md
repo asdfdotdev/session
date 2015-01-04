@@ -20,9 +20,9 @@ $session_settings = [
 				'name'		=>	'mySession',
 				'path'		=>	'/',
 				'domain'	=>	'localhost',
-				'secure'	=>	0,
+				'secure'	=>	false,
 				'hash'		=>	1,
-				'decoy'		=>	1
+				'decoy'		=>	true
 				];
 $session = new cl_session($session_settings);
 $session->start();
@@ -53,7 +53,7 @@ Force Session ID Regeneration
 $session->regenerate();
 ```
 
-Working example available at /example/index.php
+Additional examples included in /examples
 ----
 ## License
 cl_session is made available under the [GPL](http://www.gnu.org/licenses/gpl-2.0.html).
