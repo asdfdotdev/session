@@ -1,7 +1,7 @@
 <?php
 /**
  * @package cl_session Class
- * @copyright 2015 Chris Carlevato (https://github.com/christopherl)
+ * @copyright 2015 Chris Carlevato (https://github.com/chrislarrycarl)
  * @license http://www.gnu.org/licenses/lgpl-2.1.html
  * 
  * This library is free software; you can redistribute it and/or
