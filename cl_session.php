@@ -17,7 +17,7 @@
 
 class cl_session
 {
-	const VERSION = '0.1.0';
+	const VERSION = '0.1.1';
 	
 	protected $key, $path, $secure, $decoy, $min_time, $max_time;
 	protected $failmsg = 'Session generation failed.';
@@ -33,7 +33,7 @@ class cl_session
 	 * - min: Minimum time, in seconds, to regenerate session (Default: 60)
 	 * - max: Maximum time, in seconds, to regenerate session (Default: 600)
 	 * 
-	 * @param array $config API Configuration
+	 * @param array $config Session Configuration
 	 */
 	public function __construct($config){
 		if(!isset($config['name']) || $config['name'] == '')
@@ -187,11 +187,11 @@ class cl_session
 			session_id($new_id);
 		}
 		
-		if(function_exists('ini_set')){
+		if(function_exists('ini_set') && !$restart){
 			ini_set("session.hash_function", $this->getHash());
 			ini_set("session.use_strict_mode",1);
 			ini_set("session.cookie_secure",1);
-			ini_set("session.use_only_cookies",1);			
+			ini_set("session.use_only_cookies",1);
 		}
 		
 		session_set_cookie_params(0, $this->getPath(), $this->getDomain(), $this->getSecure(), true);
