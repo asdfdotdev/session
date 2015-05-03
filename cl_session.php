@@ -170,10 +170,8 @@ class cl_session
 	protected function checkLifespan(){
 		if($this->getValue('lifespan') == ''){
 			$this->resetLifespan();
-		}elseif($this->getValue('lifespan') < date("U")){
+		} elseif($this->getValue('lifespan') < date("U")) {
 			$this->regenerate();
-		}else{
-			$this->setValue('session_load',date("U"));
 		}
 	}
 	/**
@@ -213,6 +211,7 @@ class cl_session
 		
 		$this->validateFingerprint($this->getValue('fingerprint'));
 		$this->checkLifespan($this->getValue('lifespan'));
+		$this->setValue('session_load',date("U"));
 	}
 	/**
 	 * Get session variable value
