@@ -17,7 +17,7 @@
 
 class cl_session
 {
-	const VERSION = '0.1.1';
+	const VERSION = '0.1.2';
 	
 	protected $key, $path, $secure, $decoy, $min_time, $max_time;
 	protected $failmsg = 'Session generation failed.';
@@ -172,6 +172,8 @@ class cl_session
 			$this->resetLifespan();
 		}elseif($this->getValue('lifespan') < date("U")){
 			$this->regenerate();
+		}else{
+			$this->setValue('session_load',date("U"));
 		}
 	}
 	/**
