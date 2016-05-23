@@ -1,6 +1,6 @@
 # ChristopherL Session Class
 
-The ChristopehrL Session class endeavors to make it easy to use basic session best practices in PHP scripts.
+The ChristopherL Session class endeavors to make it easy to use basic session best practices in PHP scripts.
 
 * Regenerate session id at random intervals.
 * Default to SHA1 for session hash
