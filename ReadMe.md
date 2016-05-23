@@ -1,30 +1,23 @@
-# cl_session Class
+# ChristopherL Session Class
 
-The cl_session class endeavors to make it easy to use basic session best practices in PHP scripts.
+The ChristopehrL Session class endeavors to make it easy to use basic session best practices in PHP scripts.
 
 * Regenerate session id at random intervals.
 * Default to SHA1 for session hash
 * Custom session naming
-* Session fingerprint checking
+* Session fingerprint validation
 * HTTPOnly session cookie
 * Decoy PHPSESSID cookie
-* Easy to create, manage & destroy session values.
+* Easy to create, manage, and destroy session values.
+* Works in PHP 5.5-7.0
 
 ----
 ## Examples
 
 Creating a session:
 ```
-include('/path_to_class/cl_session.php');
-$session_settings = [
-				'name'		=>	'mySession',
-				'path'		=>	'/',
-				'domain'	=>	'localhost',
-				'secure'	=>	false,
-				'hash'		=>	1,
-				'decoy'		=>	true
-				];
-$session = new cl_session($session_settings);
+include('/path/to/cl_session.php');
+$session = new ChristopherL\Session($session_values);
 $session->start();
 ```
 
@@ -35,16 +28,16 @@ $session->setValue('my_variable','value');
 
 Changing a Session Variable Value
 ```
-//	Set New Value
+//  Set New Value
 $session->setValue('my_variable','new value');
 
-//	Increment Value
+//  Increment Value
 $session->incValue('my_variable', 1);
 
-//	Append to Value
+//  Append to Value
 $session->appValue('my_variable','appended to current value');
 
-//	Hash Stored Value (SHA1)
+//  Hash Stored Value (SHA1)
 $session->setValue('my_variable','value_to_hash', 1);
 ```
 
