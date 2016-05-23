@@ -17,7 +17,7 @@ The ChristopehrL Session class endeavors to make it easy to use basic session be
 Creating a session:
 ```
 include('/path/to/cl_session.php');
-$session = new ChristopherL\Session($session_values);
+$session = new ChristopherL\Session();
 $session->start();
 ```
 
