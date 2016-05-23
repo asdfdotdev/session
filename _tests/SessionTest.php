@@ -1,9 +1,17 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: chris
- * Date: 5/22/16
- * Time: 11:52 AM
+ * Class SessionTest
+ *
+ * Tests include:
+ *  testSessionNoSettings           Creates and tests a new session with only default settings
+ *  testSessionCustomSettings       Creates and tests a new session with custom settings
+ *  testSessionValue                Creates new session value then changes the value
+ *  testSessionAppendValue          Creates a new session value then appends to the value
+ *  testSessionIncrementValue       Creates a new session value then increments the value
+ *  testSessionDeleteValue          Creates a new session value then deletes it
+ *  testSessionRegenerate           Regenerates session id
+ *  testSessionFingerprint          Validates session fingerprint in different situations
+ *  testExceptionThrow              Validates exception handling by class
  */
 
 namespace ChristopherL;
