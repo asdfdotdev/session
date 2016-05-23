@@ -9,6 +9,7 @@
  *  testSessionAppendValue          Creates a new session value then appends to the value
  *  testSessionIncrementValue       Creates a new session value then increments the value
  *  testSessionDeleteValue          Creates a new session value then deletes it
+ *  testSessionHashValue            Creates a new hashed session value
  *  testSessionRegenerate           Regenerates session id
  *  testSessionFingerprint          Validates session fingerprint in different situations
  *  testExceptionThrow              Validates exception handling by class
@@ -198,6 +199,25 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         // Verify decoy value isn't in session array (no decoy cookie in use)
         $session_dump = $session->dump(2);
         $this->assertFalse(array_key_exists('my_variable', $session_dump['clValues']));
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testSessionHashValue()
+    {
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+
+        require('cl_session.php');
+        $session = new Session();
+        $session->start();
+
+        // Create a new session string value
+        $session->setValue('my_hashed_variable', 'plain text value', true);
+
+        // Verifiy creation of hashed session value
+        $this->assertEquals($session->getValue('my_hashed_variable'), sha1('plain text value'));
     }
 
     /**
