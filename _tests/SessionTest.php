@@ -1,6 +1,6 @@
 <?php
 /**
- * Class SessionTest
+ * Class SessionTest.
  *
  * Tests include:
  *  testSessionNoSettings           Creates and tests a new session with only default settings
@@ -17,7 +17,6 @@
 
 namespace ChristopherL;
 
-
 class SessionTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -28,12 +27,12 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        require('cl_session.php');
+        require 'cl_session.php';
         $session = new Session();
         $session->start();
 
         // Verify session lifespan falls between default times range of 60 & 600
-        $current_time = date("U");
+        $current_time = date('U');
         $session_min = $current_time + 60;
         $session_max = $current_time + 600;
         $session_lifespan = $session->getValue('lifespan');
@@ -63,22 +62,22 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
         $session_settings = array(
-            'name'      => 'TestSession',
-            'path'      => '/subdirectory',
-            'domain'    => '.christopherl.com',
-            'secure'    => true,
-            'hash'      => 1,
-            'decoy'     => false,
-            'min'       => 150,
-            'max'       => 200,
+            'name' => 'TestSession',
+            'path' => '/subdirectory',
+            'domain' => '.christopherl.com',
+            'secure' => true,
+            'hash' => 1,
+            'decoy' => false,
+            'min' => 150,
+            'max' => 200,
         );
 
-        require('cl_session.php');
+        require 'cl_session.php';
         $session = new Session($session_settings);
         $session->start();
 
         // Verify session lifespan falls between default times range of 60 & 600
-        $current_time = date("U");
+        $current_time = date('U');
         $session_min = $current_time + 150;
         $session_max = $current_time + 200;
         $session_lifespan = $session->getValue('lifespan');
@@ -108,7 +107,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        require('cl_session.php');
+        require 'cl_session.php';
         $session = new Session();
         $session->start();
 
@@ -133,7 +132,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        require('cl_session.php');
+        require 'cl_session.php';
         $session = new Session();
         $session->start();
 
@@ -158,7 +157,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        require('cl_session.php');
+        require 'cl_session.php';
         $session = new Session();
         $session->start();
 
@@ -183,7 +182,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        require('cl_session.php');
+        require 'cl_session.php';
         $session = new Session();
         $session->start();
 
@@ -209,7 +208,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        require('cl_session.php');
+        require 'cl_session.php';
         $session = new Session();
         $session->start();
 
@@ -228,7 +227,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        require('cl_session.php');
+        require 'cl_session.php';
         $session = new Session();
         $session->start();
 
@@ -250,27 +249,26 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        require('cl_session.php');
+        require 'cl_session.php';
         $session = new Session();
         $session->start();
 
         // Verify fingerprint matches expected recipe
-        $this->assertEquals($session->getValue('fingerprint'), sha1($_SERVER['HTTP_USER_AGENT'] . $_SERVER['REMOTE_ADDR'] . session_id()));
+        $this->assertEquals($session->getValue('fingerprint'), sha1($_SERVER['HTTP_USER_AGENT'].$_SERVER['REMOTE_ADDR'].session_id()));
 
         // Verify regenerating session id maintains valid fingerprint
         $session->regenerate();
-        $this->assertEquals($session->getValue('fingerprint'), sha1($_SERVER['HTTP_USER_AGENT'] . $_SERVER['REMOTE_ADDR'] . session_id()));
+        $this->assertEquals($session->getValue('fingerprint'), sha1($_SERVER['HTTP_USER_AGENT'].$_SERVER['REMOTE_ADDR'].session_id()));
 
         // Randomly change either the user agent or ip address
         if (rand(0, 1) == 1) {
             $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Windows; U; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)';
-        }
-        else {
+        } else {
             $_SERVER['REMOTE_ADDR'] = '10.0.10.1';
         }
 
         // Verify that whatever we changed causes the fingerprint comparison to fail
-        $this->assertNOTEquals($session->getValue('fingerprint'), sha1($_SERVER['HTTP_USER_AGENT'] . $_SERVER['REMOTE_ADDR'] . session_id()));
+        $this->assertNOTEquals($session->getValue('fingerprint'), sha1($_SERVER['HTTP_USER_AGENT'].$_SERVER['REMOTE_ADDR'].session_id()));
     }
 
     /**
@@ -281,7 +279,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        require('cl_session.php');
+        require 'cl_session.php';
         $session = new Session();
         $session->start();
 
@@ -293,7 +291,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         }
 
         // Catch the exception we should have thrown and verify the message is correct
-        catch(\Exception $e) {
+        catch (\Exception $e) {
             $this->assertEquals($e->getMessage(), 'Invalid Session Value Name');
         }
 
