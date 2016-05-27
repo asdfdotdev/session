@@ -16,7 +16,7 @@
 
 namespace ChristopherL;
 
-class cl_session
+class Session
 {
     const VERSION = '0.2';
 
