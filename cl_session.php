@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2015- Chris Carlevato (https://github.com/chrislarrycarl)
+ * @copyright 2015-2017 Chris Carlevato (https://github.com/chrislarrycarl)
  * @license http://www.gnu.org/licenses/lgpl-2.1.html
  * 
  * This library is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@ namespace ChristopherL;
 
 class Session
 {
-    const VERSION = '0.2';
+    const VERSION = '0.3';
 
     protected $name, $domain, $hash, $key, $path, $secure, $decoy, $min_time, $max_time;
     protected $failmsg = 'Session generation failed.';
@@ -29,7 +29,7 @@ class Session
      * - path:      Server path the cookie is available on          (Default: /)
      * - domain:    Domain the cookie is available to               (Default: localhost)
      * - secure:    Only transmit the cookie over https             (Default: false)
-     * - hash:      0 = MD5(128 bits), 1 = SHA1(160 bits)           (Default: 1)
+     * - hash:      0 = MD5, 1 = SHA1, or supported hash name       (Default: 1)
      * - decoy:     True/False to generate fake PHPSESSID cookie    (Default: true)
      * - min:       Min time, in seconds, to regenerate session     (Default: 60)
      * - max:       Max time, in seconds, to regenerate session     (Default: 600).
@@ -38,7 +38,6 @@ class Session
      */
     public function __construct($config = array())
     {
-
         // Create session settings based on provided config
         $settings = array(
             'name'      => isset($config['name'])   ? $config['name']   : 'clsession',
@@ -160,19 +159,32 @@ class Session
     /**
      * Set cookie id hash method.
      *
-     * @param int $hash 0 = MD5, 1 = SHA1 (Default: 1)
+     * @param int/string $hash 0 = MD5, 1 = SHA1, or supported hash name (Default: 1)
      */
     protected function setHash($hash = 1)
     {
+        if ($hash === 0) {
+            $hash = 'md5';
+        }
+        else if ($hash === 1) {
+            $hash = 'sha256';
+        }
+        else if (in_array($hash, hash_algos())) {
+            $hash = $hash;
+        }
+        else {
+            $this->Error('Invalid hash algorithm selected.');
+        }
+
         $this->hash = $hash;
     }
 
     /**
-     * Get cookie id hash setting.
+     * Get session hash setting.
      *
      * @return int Cookie Hash Setting
      */
-    protected function getHash()
+    public function getHash()
     {
         return $this->hash;
     }
@@ -316,7 +328,7 @@ class Session
     {
         // if requested, hash the value before saving it
         if ($hash) {
-            $value = sha1($value);
+            $value = hash($this->getHash(), $value);
         }
 
         $_SESSION['clValues'][$key] = $value;

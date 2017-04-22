@@ -11,7 +11,7 @@
         'path'		=>	'/',
         'domain'	=>	'localhost',
         'secure'	=>	false,
-        'hash'		=>	1,
+        'hash'		=>	'sha512',
         'decoy'		=>	true,
         'min'       =>	5,
         'max'       =>	10
@@ -26,6 +26,7 @@
 	$session->setValue('random', (string)rand(0, 5000));
 	$session->setValue('fixed','some value');
     $session->setValue('array', array('one thing', 'two thing', 'has_key' => 'red thing', 'blue_thing' => array('text', false, 50)));
+    $session->setValue('hashed', 'this is my string', true);
 	
 	// Session Variable Set Outside of Class
 	$_SESSION['Outside'] = 'a session value set the old fashioned way';
@@ -37,6 +38,7 @@
 	$random = $session->getValue('random');
 	$fixed = $session->getValue('fixed');
     $array = print_r($session->getValue('array'), true);
+    $hashed = $session->getValue('hashed');
 	
 	
 	//	Output Session Variables
@@ -59,6 +61,9 @@
         </p>
 	    <p>
 	        <b>array:</b> {$array}
+        </p>
+        <p>
+            <b>hashed:</b> {$hashed}        
         </p>
 	    <p>
 	       <b>Outside:</b> {$_SESSION['Outside']}

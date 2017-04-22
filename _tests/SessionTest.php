@@ -17,7 +17,7 @@
 
 namespace ChristopherL;
 
-class SessionTest extends \PHPUnit_Framework_TestCase
+class SessionTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @runInSeparateProcess
@@ -216,7 +216,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $session->setValue('my_hashed_variable', 'plain text value', true);
 
         // Verifiy creation of hashed session value
-        $this->assertEquals($session->getValue('my_hashed_variable'), sha1('plain text value'));
+        $this->assertEquals($session->getValue('my_hashed_variable'), hash($session->getHash(), 'plain text value'));
     }
 
     /**
