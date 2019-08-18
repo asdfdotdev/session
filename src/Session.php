@@ -691,7 +691,7 @@ class Session
     {
         if (version_compare(phpversion(), '7.1.0', '<')) {
             $this->error(
-                'PHP v7.1.0 or newer is required.',
+                'PHP v7.1.0 or newer is required.'
             );
         }
     }
