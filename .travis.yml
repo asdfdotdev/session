@@ -1,0 +1,37 @@
+language: php
+
+notifications:
+  email:
+  on_success: never
+  on_failure: change
+
+branches:
+  only:
+  - master
+  - development
+
+cache:
+  directories:
+  - $HOME/.composer/cache
+
+matrix:
+  include:
+  - php: 7.1
+  - php: 7.2
+  - php: 7.3
+
+before_script:
+  - composer install
+  - ./vendor/bin/phpcs --version
+  - ./vendor/bin/phpcs -i
+  - ./vendor/bin/phpcs src/* --report=summary --standard=PSR2
+  - ./vendor/bin/phpcs src/* --report=summary --standard=PSR12
+  - ./vendor/bin/phpcs --standard=PHPCompatibility -p --runtime-set testVersion  7.1- src/*
+
+script:
+  - cd _tests
+  - mkdir -p build/logs
+  - ../vendor/bin/phpunit
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

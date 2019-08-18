@@ -1,59 +1,68 @@
 <?php
 /**
- * Appending values to a session variable
+ * Append values to a session variable.
  */
 
-	//	Create Session
-    require_once('../cl_session.php');
+include('../src/Session.php');
 
-	$session_values = array(
-        'name'		=>	'AppendSession',
-        'decoy'		=>	false,
-    );
-	$session = new ChristopherL\Session($session_values);
-	$session->start();
+$session = new Asdfdotdev\Session([
+    'name'   => 'AppendSession',
+    'decoy'  => false,
+    'min'    => 5,
+    'max'    => 10,
+    'debug'  => true,
+]);
+$session->start();
 
 
-	//	Create/Update Session Variable (Refresh the page to add additional)
-	$session->appValue('my_var', 'littering and ');
-	
-	
-	//	Retrieve and output Session Variable
-	$my_session_variable = $session->getValue('my_var');
+/**
+ * About this example.
+ */
 
-	echo <<<HTML
-        <h3>Session Variables</h3>
-	    <p>
-	        my_var: {$my_session_variable}
-        </p>
+echo <<<HTML
+    <h3>About this Example</h3>
+    <p style="max-width:750px;">
+        Each page refresh will append to both the array and string session values.
+        Delete the session cookie, or close your browser, to generate a new session and reset the values.
+    </p>
 HTML;
 
 
-	//	Output Session Settings
-    $session_id = session_id();
-    $epoch_time = date("U");
-    $session_lifespan = $session->getValue('lifespan');
+/**
+ * Increment the session value.
+ */
 
-	echo <<<HTML
-        <hr>
-        <h3>Session Settings</h3>
-        <p>
-            Session ID: {$session_id}
-        </p>
-        <p>
-            Current Time: {$epoch_time}
-        </p>
-        <p>
-            Regenerate At: {$session_lifespan}
-        </p>
+$session->appValue('my_var_string', 'text and more ');
+$session->appValue('my_var_array', [rand()]);
+
+$my_var_string = $session->getValue('my_var_string');
+$my_var_array = print_r(
+    $session->getValue('my_var_array'),
+    true
+);
+
+
+/**
+ * Output results
+ */
+echo <<<HTML
+    <hr>
+    <h3>Session Variable</h3>
+    <p>
+        <b>String:</b> {$my_var_string}
+    </p>
+    <p>
+        <b>Array:</b> {$my_var_array}
+    </p>
 HTML;
 
 
-    //	Output Session Contents
-    $session_content = $session->dump();
-
-	echo <<<HTML
-        <hr>
-        <h3>Debug</h3>
-        <pre>{$session_content}</pre>
+/**
+ * Debugging
+ */
+$session_content = $session->dump();
+echo <<<HTML
+    <hr>
+    <h3>Debug</h3>
+    <pre style="overflow:scroll;">{$session_content}</pre>
 HTML;
