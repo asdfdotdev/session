@@ -1,6 +1,6 @@
 {
     "name": "asdfdotdev/session",
-    "version": "1.0.0",
+    "version": "0.4.0",
     "description": "endeavors to make it easy to use basic session best practices in PHP scripts.",
     "type": "library",
     "license": "LGPL-2.1-only",

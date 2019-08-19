@@ -15,7 +15,7 @@
  * @author    Chris Carlevato <hello@asdf.dev>
  * @copyright 2015-2019 Chris Carlevato
  * @license   http://www.gnu.org/licenses/lgpl-2.1.html
- * @version   1.0.0
+ * @version   0.4.0
  * @link      https://github.com/asdfdotdev/session
  */
 
@@ -69,8 +69,9 @@ class Session
      * - secure:   Only transmit the cookie over https            (Default: false)
      * - hash:     0 = MD5, 1 = SHA1, or supported hash name      (Default: 1)
      * - decoy:    True/False to generate fake PHPSESSID cookie   (Default: true)
-     * - min:      Min time, in seconds, to regenerate session     (Default: 60)
-     * - max:      Max time, in seconds, to regenerate session     (Default: 600).
+     * - min:      Min time, in seconds, to regenerate session    (Default: 60)
+     * - max:      Max time, in seconds, to regenerate session    (Default: 600)
+     *
      * @param array $config Session Configuration
      *
      * @throws \Exception
@@ -296,18 +297,6 @@ class Session
     }
 
     /**
-     * Destroy PHPSESSID decoy cookie.
-     *
-     * @return void
-     */
-    protected function killDecoyCookie()
-    {
-        if (isset($_COOKIE['PHPSESSID'])) {
-            unset($_COOKIE['PHPSESSID']);
-        }
-    }
-
-    /**
      * Generate sha256 fingerprint hash from current settings.
      *
      * @return string
@@ -339,7 +328,7 @@ class Session
      *
      * @throws \Exception
      *
-     * @return void
+     * @return bool Valid fingerprint
      */
     protected function validateFingerprint()
     {
@@ -347,8 +336,10 @@ class Session
 
         if ($this->getValue('fingerprint') == '') {
             $this->setFingerprint();
+            return true;
         } elseif ($this->getValue('fingerprint') != $valid) {
             $this->end();
+            return false;
         }
     }
 
@@ -393,13 +384,9 @@ class Session
      */
     public function start($restart = false)
     {
-        $foo = 'bar';
-
         if ($restart) {
             $this->regenerateId();
-        }
-
-        if (function_exists('ini_set') && !$restart) {
+        } else {
             $this->configureSystemSessionSettings();
         }
 
@@ -418,11 +405,13 @@ class Session
             $_SESSION[$this->valuesKey] = [];
         }
 
-        $valuesEmpty = (count($_SESSION[$this->valuesKey]) == 0);
-
-        if ($restart || $valuesEmpty) {
-            $this->setFingerprint();
+        if ($restart) {
             $this->resetLifespan();
+            $valuesEmpty = (count($_SESSION[$this->valuesKey]) === 0);
+
+            if ($valuesEmpty) {
+                $this->setFingerprint();
+            }
         }
 
         if ($this->decoy) {
@@ -431,13 +420,14 @@ class Session
             $this->dropValue('decoy_value');
         }
 
-        $this->validateFingerprint();
-        $this->checkLifespan();
-        $this->setValue('session_loaded', date('U'));
-        $this->setValue(
-            'ttl',
-            ($this->getValue('lifespan') - $this->getValue('session_loaded'))
-        );
+        if ($this->validateFingerprint()) {
+            $this->checkLifespan();
+            $this->setValue('session_loaded', date('U'));
+            $this->setValue(
+                'ttl',
+                ($this->getValue('lifespan') - $this->getValue('session_loaded'))
+            );
+        }
     }
 
     /**
@@ -582,11 +572,13 @@ class Session
      */
     private function configureSystemSessionSettings()
     {
-        ini_set('session.sid_length', $this->getIdLength());
-        ini_set('session.sid_bits_per_character', $this->getIdBits());
-        ini_set('session.cookie_secure', $this->getSecure());
-        ini_set('session.use_strict_mode', 1);
-        ini_set('session.use_only_cookies', 1);
+        if (function_exists('ini_set')) {
+            ini_set('session.sid_length', $this->getIdLength());
+            ini_set('session.sid_bits_per_character', $this->getIdBits());
+            ini_set('session.cookie_secure', $this->getSecure());
+            ini_set('session.use_strict_mode', 1);
+            ini_set('session.use_only_cookies', 1);
+        }
     }
 
     /**
