@@ -157,7 +157,6 @@ class Session
 
     /**
      * Set cookie domain. To make cookie visible on all subdomains prefixed with a dot
-     * Ex) .christopherl.com.
      *
      * @param string $domain Cookie Domain
      */
@@ -246,11 +245,25 @@ class Session
         }
     }
 
+    /**
+     * Get session id length.
+     *
+     * @return int
+     */
     protected function getIdLength()
     {
         return $this->idLength;
     }
 
+    /**
+     * Set session id bits.
+     *
+     * @param int $bits
+     *
+     * @throws \Exception
+     *
+     * @return void
+     */
     protected function setIdBits(int $bits)
     {
         if (in_array($bits, range(4, 6))) {
@@ -262,6 +275,11 @@ class Session
         }
     }
 
+    /**
+     * Get session id bits.
+     *
+     * @return int
+     */
     protected function getIdBits()
     {
         return $this->idBits;
@@ -666,6 +684,13 @@ class Session
         }
     }
 
+    /**
+     * Confirm that request domain matches cookie domain.
+     *
+     * @throws \Exception
+     *
+     * @return void
+     */
     private function validateSessionDomain()
     {
         if ($_SERVER['HTTP_HOST'] != $this->getDomain()) {
@@ -679,6 +704,13 @@ class Session
         }
     }
 
+    /**
+     * Confirm PHP version is at least 7.1.0
+     *
+     * @throws \Exception
+     *
+     * @return void
+     */
     private function validatePHPVersion()
     {
         if (version_compare(phpversion(), '7.1.0', '<')) {
