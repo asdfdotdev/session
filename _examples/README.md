@@ -1,18 +1,23 @@
-todo: fix it
+# Examples
 
-Creating a session:
+The following outlines a few usage options.
+
+### Creating a session
+
 ```
-include('/path/to/cl_session.php');
-$session = new ChristopherL\Session();
+include('/path/to/Session.php');
+$session = new Asdfdotdev\Session();
 $session->start();
 ```
 
-Creating a Session Variable
+### Creating a Session Variable
+
 ```
 $session->setValue('my_variable','value');
 ```
 
-Changing a Session Variable Value
+### Changing a Session Variable Value
+
 ```
 //  Set New Value
 $session->setValue('my_variable','new value');
@@ -23,11 +28,20 @@ $session->incValue('my_variable', 1);
 //  Append to Value
 $session->appValue('my_variable','appended to current value');
 
-//  Hash Stored Value (SHA1)
-$session->setValue('my_variable','value_to_hash', 1);
+//  Hash Stored Value
+$session->setValue('my_variable','value_to_hash', true);
 ```
 
-Force Session ID Regeneration
+### Force Session ID Regeneration
+
 ```
 $session->regenerate();
 ```
+
+## Included Examples
+
+- [Basic Session Usage](./basic.php)
+- [Append a Session Value](./append.php)
+- [Hash a Session Value](./hashed)
+- [Increment a Session Value](./increment)
+- [Regenerate Session ID](./regenerate.php)
