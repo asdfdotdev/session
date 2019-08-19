@@ -51,7 +51,7 @@ class TestSession extends \PHPUnit\Framework\TestCase
 
         // Verify decoy value is in session array (decoy cookie in use)
         $session_dump = $session->dump(2);
-        $this->assertTrue(array_key_exists('decoy_value', $session_dump['asdfValues']));
+        $this->assertTrue(array_key_exists('decoy_value', $session_dump['asdfdotdev.session']));
     }
 
     /**
@@ -95,7 +95,7 @@ class TestSession extends \PHPUnit\Framework\TestCase
 
         // Verify decoy value isn't in session array (no decoy cookie in use)
         $session_dump = $session->dump(2);
-        $this->assertFalse(array_key_exists('decoy_value', $session_dump['asdfValues']));
+        $this->assertFalse(array_key_exists('decoy_value', $session_dump['asdfdotdev.session']));
     }
 
     /**
@@ -196,7 +196,7 @@ class TestSession extends \PHPUnit\Framework\TestCase
 
         // Verify decoy value isn't in session array (no decoy cookie in use)
         $session_dump = $session->dump(2);
-        $this->assertFalse(array_key_exists('my_variable', $session_dump['asdfValues']));
+        $this->assertFalse(array_key_exists('my_variable', $session_dump['asdfdotdev.session']));
     }
 
     /**
@@ -234,11 +234,23 @@ class TestSession extends \PHPUnit\Framework\TestCase
         $session->start();
 
         // Verify fingerprint matches expected recipe
-        $this->assertEquals($session->getValue('fingerprint'), sha1($_SERVER['HTTP_USER_AGENT'] . $_SERVER['REMOTE_ADDR'] . session_id()));
+        $this->assertEquals(
+            $session->getValue('fingerprint'),
+            hash(
+                'sha256',
+                $_SERVER['HTTP_USER_AGENT'] . $_SERVER['REMOTE_ADDR'] . session_id()
+            )
+        );
 
         // Verify regenerating session id maintains valid fingerprint
         $session->regenerate();
-        $this->assertEquals($session->getValue('fingerprint'), sha1($_SERVER['HTTP_USER_AGENT'] . $_SERVER['REMOTE_ADDR'] . session_id()));
+        $this->assertEquals(
+            $session->getValue('fingerprint'),
+            hash(
+                'sha256',
+                $_SERVER['HTTP_USER_AGENT'] . $_SERVER['REMOTE_ADDR'] . session_id()
+            )
+        );
 
         // Randomly change either the user agent or ip address
         if (rand(0, 1) == 1) {
@@ -263,21 +275,7 @@ class TestSession extends \PHPUnit\Framework\TestCase
         $session = new Session();
         $session->start();
 
-        $missing_value = 'this should not change';
-
-        // Try to retrieve a session value that doesn't exist
-        try {
-            $missing_value = $session->getValue('there_is_no_spoon');
-        }
-
-        // Catch the exception we should have thrown and verify the message is correct
-        catch (\Exception $e) {
-            $this->assertEquals($e->getMessage(), 'Invalid Session Value Name');
-        }
-
-        // make sure our value hasn't changed
-        finally {
-            $this->assertEquals($missing_value, 'this should not change');
-        }
+        $missing_value = $session->getValue('there_is_no_spoon');
+        $this->assertEquals($missing_value, null);
     }
 }
