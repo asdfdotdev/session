@@ -5,6 +5,12 @@ The following outlines a few usage options.
 ### Creating a session
 
 ```
+// Use Composer
+require __DIR__ . '/vendor/autoload.php';
+$session = new Asdfdotdev\Session();
+$session->start();
+
+// Direct
 include('/path/to/Session.php');
 $session = new Asdfdotdev\Session();
 $session->start();

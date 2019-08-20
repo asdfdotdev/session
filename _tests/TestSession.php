@@ -243,7 +243,6 @@ class TestSession extends \PHPUnit\Framework\TestCase
         require '../src/Session.php';
         $session = new Session();
         $session->start();
-
         $session->setValue('my_variable', 'this is the value');
 
         $this->assertEquals(
@@ -359,32 +358,6 @@ class TestSession extends \PHPUnit\Framework\TestCase
         } catch (\Exception $e) {
             $this->assertEquals($e->getMessage(), 'Only numeric values can be passed to Asdfdotdev\Session::incValue');
         }
-    }
-
-    /**
-     * @runInSeparateProcess
-     */
-    public function testInvalidFingerprint()
-    {
-        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
-        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
-
-        require '../src/Session.php';
-        $session = new Session();
-        $session->start();
-        $session->setValue('my_variable', 'this is the value');
-
-        $original_print = $session->getValue('fingerprint');
-        $session->setValue('fingerprint', 'hey do not set this directly');
-        $invalid_print = $session->getValue('fingerprint');
-
-        $this->assertNotEquals($original_print, $invalid_print);
-
-        $this->assertTrue(!empty($_SESSION));
-
-        $session->regenerate();
-
-        $this->assertTrue(empty($_SESSION));
     }
 
     /**

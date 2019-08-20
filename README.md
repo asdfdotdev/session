@@ -34,8 +34,6 @@ Session class is developed for and tested with recent PHP Version:
 composer require asdfdotdev/session
 ```
 
-If you don't use composer just clone/download the [Session](./src/Session.php) class file and include it in your project. 
-
 ## Use
 
 A number of usage examples are included in `_examples/`. Check out the examples [README](./_examples/README.md) for further details.

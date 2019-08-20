@@ -63,14 +63,14 @@ class Session
 
     /**
      * Config settings can include:
-     * - name:     Name of the session                            (Default: clsession)
-     * - path:     Server path the cookie is available on         (Default: /)
-     * - domain:   Domain the cookie is available to              (Default: localhost)
-     * - secure:   Only transmit the cookie over https            (Default: false)
-     * - hash:     0 = MD5, 1 = SHA1, or supported hash name      (Default: 1)
-     * - decoy:    True/False to generate fake PHPSESSID cookie   (Default: true)
-     * - min:      Min time, in seconds, to regenerate session    (Default: 60)
-     * - max:      Max time, in seconds, to regenerate session    (Default: 600)
+     * - name:    Name of the session                         (Default: asdfdotdev)
+     * - path:    Server path the cookie is available on      (Default: /)
+     * - domain:  Domain the session cookie is available on   (Default: localhost)
+     * - secure:  Only transmit the cookie over https         (Default: false)
+     * - hash:    Name of algorithm to use for hashed values  (Default: sha256)
+     * - decoy:   Generate fake PHPSESSID cookie              (Default: true)
+     * - min:     Min time in seconds to regenerate session   (Default: 60)
+     * - max:     Max time in seconds to regenerate session   (Default: 600)
      *
      * @param array $config Session Configuration
      *
@@ -95,7 +95,6 @@ class Session
             $config
         );
 
-        /** Configure settings */
         $this->setName($settings['name']);
         $this->setPath($settings['path']);
         $this->setDomain($settings['domain']);
@@ -300,7 +299,9 @@ class Session
      */
     protected function generateDecoyCookie()
     {
-        if (!isset($_COOKIE['PHPSESSID'])) {
+        $has_decoy = isset($_COOKIE['PHPSESSID']);
+
+        if ($this->decoy && !$has_decoy) {
             $this->setValue('decoy_value', md5(mt_rand()));
             setcookie(
                 'PHPSESSID',
@@ -350,15 +351,21 @@ class Session
      */
     protected function validateFingerprint()
     {
+        $print = $this->getValue('fingerprint');
         $valid = $this->generateFingerprint();
 
-        if ($this->getValue('fingerprint') == '') {
+        if (!isset($print)) {
+
             $this->setFingerprint();
-            return true;
-        } elseif ($this->getValue('fingerprint') != $valid) {
+
+        } elseif ($print != $valid) {
+
             $this->end();
             return false;
+
         }
+
+        return true;
     }
 
     /**
@@ -408,6 +415,31 @@ class Session
             $this->configureSystemSessionSettings();
         }
 
+        $this->prepareSession();
+
+        if ($restart) {
+            $this->setFingerprint();
+            $this->resetLifespan();
+        }
+
+        if ($this->validateFingerprint()) {
+            $this->generateDecoyCookie();
+            $this->checkLifespan();
+            $this->setValue('session_loaded', date('U'));
+            $this->setValue(
+                'ttl',
+                ($this->getValue('lifespan') - $this->getValue('session_loaded'))
+            );
+        }
+    }
+
+    /**
+     * Generate generate system session, maybe scaffold value array
+     *
+     * @return void
+     */
+    private function prepareSession()
+    {
         session_set_cookie_params(
             0,
             $this->getPath(),
@@ -421,30 +453,6 @@ class Session
 
         if (!isset($_SESSION[$this->valuesKey])) {
             $_SESSION[$this->valuesKey] = [];
-        }
-
-        if ($restart) {
-            $this->resetLifespan();
-            $valuesEmpty = (count($_SESSION[$this->valuesKey]) === 0);
-
-            if ($valuesEmpty) {
-                $this->setFingerprint();
-            }
-        }
-
-        if ($this->decoy) {
-            $this->generateDecoyCookie();
-        } else {
-            $this->dropValue('decoy_value');
-        }
-
-        if ($this->validateFingerprint()) {
-            $this->checkLifespan();
-            $this->setValue('session_loaded', date('U'));
-            $this->setValue(
-                'ttl',
-                ($this->getValue('lifespan') - $this->getValue('session_loaded'))
-            );
         }
     }
 
