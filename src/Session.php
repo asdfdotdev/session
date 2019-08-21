@@ -355,14 +355,10 @@ class Session
         $valid = $this->generateFingerprint();
 
         if (!isset($print)) {
-
             $this->setFingerprint();
-
         } elseif ($print != $valid) {
-
             $this->end();
             return false;
-
         }
 
         return true;

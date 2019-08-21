@@ -19,11 +19,11 @@ From the `_tests/` directory run `$ ../vendor/bin/phpunit` to run the tests. Thi
 ```
 PHPUnit 7.5.14 by Sebastian Bergmann and contributors.
 
-...............                                                   15 / 15 (100%)
+..............                                                    14 / 14 (100%)
 
-Time: 1.97 seconds, Memory: 6.00 MB
+Time: 1.76 seconds, Memory: 6.00 MB
 
-OK (15 tests, 42 assertions)
+OK (14 tests, 39 assertions)
 
 Generating code coverage report in Clover XML format ... done
 ```

@@ -5,7 +5,7 @@ The following outlines a few usage options.
 ### Creating a session
 
 ```
-// Use Composer
+// Using Composer
 require __DIR__ . '/vendor/autoload.php';
 $session = new Asdfdotdev\Session();
 $session->start();
