@@ -1,12 +1,12 @@
 <?php
 /**
- * A simple session with a single value.
+ * A session with a single hashed value.
  */
 
 include('../src/Session.php');
 
 $session = new Asdfdotdev\Session([
-    'name'   => 'RegenerateSession',
+    'name'   => 'HashedSession',
     'decoy'  => false,
     'min'    => 5,
     'max'    => 10,
@@ -14,7 +14,6 @@ $session = new Asdfdotdev\Session([
 ]);
 $session->start();
 
-$session->regenerate();
 
 /**
  * About this example.
@@ -23,12 +22,14 @@ $session->regenerate();
 echo <<<HTML
     <h3>About this Example</h3>
     <p style="max-width:750px;">
-        On initial creation a random number will be appended to the <code>my_var</code>
-        string. This example forces the session id to be regenerated on each request. The 
-        regenerated session id can be viewed in the session cookie. Delete the session 
-        cookie, or close your browser, to generate a new session and value.
+        On initial session creation a sha256 hash of a random number stored in 
+        <code>my_var</code>. In subsequent page refreshes this hashed value will 
+        not change as it will be retrieved from the saved session value. Delete 
+        the session cookie, or close your browser, to generate a new session and 
+        value.
     </p>
 HTML;
+
 
 /**
  * Create, or retrieve, the session variable.
@@ -37,7 +38,8 @@ $my_var = $session->getValue('my_var');
 if (!isset($my_var)) {
     $session->setValue(
         'my_var',
-        'A string that ends in a random number. ' . rand()
+        rand(),
+        true
     );
     $my_var = $session->getValue('my_var');
     $result = 'Created session variable.';

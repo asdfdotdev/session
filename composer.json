@@ -1,0 +1,31 @@
+{
+    "name": "asdfdotdev/session",
+    "version": "0.4.0",
+    "description": "endeavors to make it easy to use basic session best practices in PHP scripts.",
+    "type": "library",
+    "license": "LGPL-2.1-only",
+    "authors": [
+        {
+            "name": "Chris Carlevato",
+            "email": "hello@asdf.dev"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/asdfdotdev/session/issues",
+        "source": "https://github.com/asdfdotdev/session"
+    },
+    "autoload": {
+        "psr-4": {
+            "Asdfdotdev\\": "src/"
+        }
+    },
+    "require": {},
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.4",
+        "phpcompatibility/php-compatibility": "^9.1",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.5",
+        "phpunit/phpunit": "^7.5"
+    },
+    "keywords": ["sessions"],
+    "minimum-stability": "stable"
+}

@@ -1,36 +1,21 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <phpunit
-        backupStaticAttributes="false"
-        cacheTokens="false"
-        colors="true"
-        convertErrorsToExceptions="true"
-        convertNoticesToExceptions="true"
-        convertWarningsToExceptions="true"
-        forceCoversAnnotation="false"
-        mapTestClassNameToCoveredClassName="false"
-        processIsolation="false"
-        stopOnError="false"
-        stopOnFailure="false"
-        stopOnIncomplete="false"
-        stopOnSkipped="false"
-        strict="false"
-        verbose="true">
-
+    backupGlobals="false"
+    colors="true"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+>
     <testsuites>
-        <!-- Run All Tests -->
-        <testsuite name="cl_all">
-            <directory>./</directory>
+        <testsuite name="all">
+            <directory prefix="Test" suffix=".php">./</directory>
         </testsuite>
     </testsuites>
-
     <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php"></directory>
-            <file></file>
-            <exclude>
-                <directory suffix=".php"></directory>
-                <file></file>
-            </exclude>
+        <whitelist processUncoveredFilesFromWhitelist="false">
+            <directory suffix=".php">../src/</directory>
         </whitelist>
     </filter>
+    <logging>
+        <log type="coverage-clover" target="build/logs/clover.xml"/>
+    </logging>
 </phpunit>

@@ -15,9 +15,9 @@
  *  testExceptionThrow              Validates exception handling by class
  */
 
-namespace ChristopherL;
+namespace Asdfdotdev;
 
-class SessionTest extends \PHPUnit\Framework\TestCase
+class TestSession extends \PHPUnit\Framework\TestCase
 {
     /**
      * @runInSeparateProcess
@@ -27,7 +27,7 @@ class SessionTest extends \PHPUnit\Framework\TestCase
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        require 'cl_session.php';
+        require '../src/Session.php';
         $session = new Session();
         $session->start();
 
@@ -40,7 +40,7 @@ class SessionTest extends \PHPUnit\Framework\TestCase
         $this->assertLessThanOrEqual($session_max, $session_lifespan);
 
         // Verify default session name is in use
-        $this->assertEquals(session_name(), 'clsession');
+        $this->assertEquals(session_name(), 'asdfdotdev');
 
         // Verify default session cookie settings
         $array_details = session_get_cookie_params();
@@ -51,7 +51,7 @@ class SessionTest extends \PHPUnit\Framework\TestCase
 
         // Verify decoy value is in session array (decoy cookie in use)
         $session_dump = $session->dump(2);
-        $this->assertTrue(array_key_exists('decoy_value', $session_dump['clValues']));
+        $this->assertTrue(array_key_exists('decoy_value', $session_dump['asdfdotdev.session']));
     }
 
     /**
@@ -61,19 +61,18 @@ class SessionTest extends \PHPUnit\Framework\TestCase
     {
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
-        $session_settings = array(
+
+        require '../src/Session.php';
+        $session = new Session([
             'name' => 'TestSession',
             'path' => '/subdirectory',
-            'domain' => '.christopherl.com',
+            'domain' => '.testing.edu',
             'secure' => true,
-            'hash' => 1,
             'decoy' => false,
+            'hash' => 'sha512',
             'min' => 150,
             'max' => 200,
-        );
-
-        require 'cl_session.php';
-        $session = new Session($session_settings);
+        ]);
         $session->start();
 
         // Verify session lifespan falls between default times range of 60 & 600
@@ -90,13 +89,16 @@ class SessionTest extends \PHPUnit\Framework\TestCase
         // Verify default session cookie settings
         $array_details = session_get_cookie_params();
         $this->assertEquals($array_details['path'], '/subdirectory');
-        $this->assertEquals($array_details['domain'], '.christopherl.com');
+        $this->assertEquals($array_details['domain'], '.testing.edu');
         $this->assertEquals($array_details['secure'], true);
         $this->assertEquals($array_details['httponly'], true);
 
+        // Verify hash has changed
+        $this->assertEquals($session->getHash(), 'sha512');
+
         // Verify decoy value isn't in session array (no decoy cookie in use)
         $session_dump = $session->dump(2);
-        $this->assertFalse(array_key_exists('decoy_value', $session_dump['clValues']));
+        $this->assertFalse(array_key_exists('decoy_value', $session_dump['asdfdotdev.session']));
     }
 
     /**
@@ -107,15 +109,23 @@ class SessionTest extends \PHPUnit\Framework\TestCase
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        require 'cl_session.php';
+        require '../src/Session.php';
         $session = new Session();
         $session->start();
 
-        // Create a new session string value
+        // Create a new session string values
         $session->setValue('my_variable', 'this is the value');
+        $session->setValue('my_hashed_variable', 'this is the other value', true);
 
-        // Verifiy creation of session value
+        // Verifiy creation of session values
         $this->assertEquals($session->getValue('my_variable'), 'this is the value');
+        $this->assertEquals(
+            $session->getValue('my_hashed_variable'),
+            hash(
+                'sha256',
+                'this is the other value'
+            )
+        );
 
         // Change session value
         $session->setValue('my_variable', 50);
@@ -132,7 +142,7 @@ class SessionTest extends \PHPUnit\Framework\TestCase
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        require 'cl_session.php';
+        require '../src/Session.php';
         $session = new Session();
         $session->start();
 
@@ -157,7 +167,7 @@ class SessionTest extends \PHPUnit\Framework\TestCase
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        require 'cl_session.php';
+        require '../src/Session.php';
         $session = new Session();
         $session->start();
 
@@ -182,7 +192,7 @@ class SessionTest extends \PHPUnit\Framework\TestCase
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        require 'cl_session.php';
+        require '../src/Session.php';
         $session = new Session();
         $session->start();
 
@@ -197,26 +207,7 @@ class SessionTest extends \PHPUnit\Framework\TestCase
 
         // Verify decoy value isn't in session array (no decoy cookie in use)
         $session_dump = $session->dump(2);
-        $this->assertFalse(array_key_exists('my_variable', $session_dump['clValues']));
-    }
-
-    /**
-     * @runInSeparateProcess
-     */
-    public function testSessionHashValue()
-    {
-        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
-        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
-
-        require 'cl_session.php';
-        $session = new Session();
-        $session->start();
-
-        // Create a new session string value
-        $session->setValue('my_hashed_variable', 'plain text value', true);
-
-        // Verifiy creation of hashed session value
-        $this->assertEquals($session->getValue('my_hashed_variable'), hash($session->getHash(), 'plain text value'));
+        $this->assertFalse(array_key_exists('my_variable', $session_dump['asdfdotdev.session']));
     }
 
     /**
@@ -227,7 +218,7 @@ class SessionTest extends \PHPUnit\Framework\TestCase
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        require 'cl_session.php';
+        require '../src/Session.php';
         $session = new Session();
         $session->start();
 
@@ -249,26 +240,32 @@ class SessionTest extends \PHPUnit\Framework\TestCase
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        require 'cl_session.php';
+        require '../src/Session.php';
         $session = new Session();
         $session->start();
+        $session->setValue('my_variable', 'this is the value');
 
-        // Verify fingerprint matches expected recipe
-        $this->assertEquals($session->getValue('fingerprint'), sha1($_SERVER['HTTP_USER_AGENT'].$_SERVER['REMOTE_ADDR'].session_id()));
+        $this->assertEquals(
+            $session->getValue('fingerprint'),
+            hash(
+                'sha256',
+                $_SERVER['HTTP_USER_AGENT'] . $_SERVER['REMOTE_ADDR'] . session_id()
+            )
+        );
 
-        // Verify regenerating session id maintains valid fingerprint
-        $session->regenerate();
-        $this->assertEquals($session->getValue('fingerprint'), sha1($_SERVER['HTTP_USER_AGENT'].$_SERVER['REMOTE_ADDR'].session_id()));
-
-        // Randomly change either the user agent or ip address
         if (rand(0, 1) == 1) {
             $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Windows; U; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)';
         } else {
             $_SERVER['REMOTE_ADDR'] = '10.0.10.1';
         }
 
-        // Verify that whatever we changed causes the fingerprint comparison to fail
-        $this->assertNOTEquals($session->getValue('fingerprint'), sha1($_SERVER['HTTP_USER_AGENT'].$_SERVER['REMOTE_ADDR'].session_id()));
+        $this->assertNOTEquals(
+            $session->getValue('fingerprint'),
+            hash(
+                'sha256',
+                $_SERVER['HTTP_USER_AGENT'] . $_SERVER['REMOTE_ADDR'] . session_id()
+            )
+        );
     }
 
     /**
@@ -279,25 +276,107 @@ class SessionTest extends \PHPUnit\Framework\TestCase
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        require 'cl_session.php';
+        require '../src/Session.php';
         $session = new Session();
         $session->start();
 
-        $missing_value = 'this should not change';
+        $missing_value = $session->getValue('there_is_no_spoon');
+        $this->assertEquals($missing_value, null);
+    }
 
-        // Try to retrieve a session value that doesn't exist
+    /**
+     * @runInSeparateProcess
+     */
+    public function testInvalidHash()
+    {
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+
         try {
-            $missing_value = $session->getValue('there_is_no_spoon');
+            require '../src/Session.php';
+            $session = new Session([
+                'hash' => 'doesnotexist'
+            ]);
+            $session->start();
+        } catch (\Exception $e) {
+            $this->assertEquals($e->getMessage(), 'Server does not support selected hash algorithm selected.');
         }
+    }
 
-        // Catch the exception we should have thrown and verify the message is correct
-        catch (\Exception $e) {
-            $this->assertEquals($e->getMessage(), 'Invalid Session Value Name');
-        }
+    /**
+     * @runInSeparateProcess
+     */
+    public function testInvalidIdLength()
+    {
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        // make sure our value hasn't changed
-        finally {
-            $this->assertEquals($missing_value, 'this should not change');
+        try {
+            require '../src/Session.php';
+            $session = new Session([
+                'length' => '21'
+            ]);
+            $session->start();
+        } catch (\Exception $e) {
+            $this->assertEquals($e->getMessage(), 'Session ID length invalid. Length must be between 22 to 256.');
         }
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testInvalidIdBits()
+    {
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+
+        try {
+            require '../src/Session.php';
+            $session = new Session([
+                'bits' => '3'
+            ]);
+            $session->start();
+        } catch (\Exception $e) {
+            $this->assertEquals($e->getMessage(), 'Session ID bits per character invalid. Options are 4, 5, or 6.');
+        }
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testInvalidIncrement()
+    {
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+
+        try {
+            require '../src/Session.php';
+            $session = new Session();
+            $session->start();
+
+            $session->incValue('should-not-work', 'this is not a numeric value');
+        } catch (\Exception $e) {
+            $this->assertEquals($e->getMessage(), 'Only numeric values can be passed to Asdfdotdev\Session::incValue');
+        }
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testInvalidMinMax()
+    {
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+
+        require '../src/Session.php';
+        $session = new Session([
+            'min' => 600,
+            'max' => 60,
+        ]);
+        $session->start();
+
+        $ttl = $session->getValue('ttl');
+
+        $this->assertGreaterThan(0, $ttl);
     }
 }
