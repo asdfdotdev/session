@@ -2,11 +2,11 @@
 
 [![Build Status](https://travis-ci.org/asdfdotdev/session.svg?branch=master)](https://travis-ci.org/asdfdotdev/session) [![codecov](https://codecov.io/gh/asdfdotdev/session/branch/master/graph/badge.svg)](https://codecov.io/gh/asdfdotdev/session) [![Packagist](https://img.shields.io/packagist/dm/asdfdotdev/session)](https://packagist.org/packages/asdfdotdev/session)
 
-This class endeavors to make it easy to use basic session best practices in PHP scripts.
+This class endeavors to make it easy to use better sessions in PHP scripts.
 
 * Easily set, increment, append, hash, and drop session values 
 * Custom session naming
-* Session fingerprint validation
+* Simple session fingerprint check
 * Regenerate session id at random intervals
 * Change session id length & bits per character*
 * HTTPOnly session cookie
@@ -15,9 +15,9 @@ This class endeavors to make it easy to use basic session best practices in PHP 
 * Force session strict mode*
 * Force session use only cookies*
 * Force HTTPS only session cookies*
-* Supports in PHP 7.1+
+* Supports PHP 7.1+
 
-<sup>\* Requires access to `ini_set()` method.</sup>
+<sup>\* Requires `ini_set()` method be enabled.</sup>
 
 ### Compatibility
 
