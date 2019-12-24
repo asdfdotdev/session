@@ -401,7 +401,7 @@ class TestSession extends \PHPUnit\Framework\TestCase
             $session = new Session(['debug' => true]);
             $session->start();
         } catch (\Exception $e) {
-            $this->assertEquals('Session directory is not writable.', $e->getMessage(),);
+            $this->assertEquals('Session directory is not writable.', $e->getMessage());
         }
     }
 
