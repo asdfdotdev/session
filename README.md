@@ -20,7 +20,7 @@ This class endeavors to make it easy to use better sessions in PHP scripts.
 
 ### Compatibility
 
-[![PHP Compatibility](https://img.shields.io/badge/PHP-7.1_to_7.4-%238892BF.svg?logo=php)](https://php.net/)
+[![PHP Compatibility](https://img.shields.io/badge/PHP-7.2_to_7.4-%238892BF.svg?logo=php)](https://php.net/)
 
 Session class is developed for and tested with recent PHP Version:
 
@@ -56,7 +56,7 @@ By default basic checks are performed when creating a session:
 
 Additional optional debugging can be enabled in session settings:
 
-- **PHP Version:** Confirms the version available is 7.1.0 or newer
+- **PHP Version:** Confirms the version available is 7.2.0 or newer
 - **Session Directory:** Confirms write access to PHP session directory
 - **Session Domain:** Confirms session domain setting matches the request domain
 
