@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Session - a class that endeavors to make using better sessions easier.
  *
@@ -13,9 +14,9 @@
  *
  * @package   Asdfdotdev
  * @author    Chris Carlevato <hello@asdf.dev>
- * @copyright 2015-2019 Chris Carlevato
+ * @copyright 2015-2020 Chris Carlevato
  * @license   http://www.gnu.org/licenses/lgpl-2.1.html
- * @version   0.4.0
+ * @version   0.5.0
  * @link      https://github.com/asdfdotdev/session
  */
 
@@ -60,6 +61,9 @@ class Session
 
     /** @var int Maximum time in seconds to regenerate session id */
     protected $timeMax;
+
+    /** @var bool */
+    protected $debug;
 
     /**
      * Config settings can include:
@@ -209,7 +213,7 @@ class Session
         if (in_array($hash, hash_algos())) {
             $this->hash = $hash;
         } else {
-            $this->Error(
+            $this->error(
                 'Server does not support selected hash algorithm selected.'
             );
         }
@@ -709,7 +713,7 @@ class Session
     }
 
     /**
-     * Confirm PHP version is at least 7.1.0
+     * Confirm PHP version is at least 7.2.0
      *
      * @throws \Exception
      *
@@ -717,9 +721,9 @@ class Session
      */
     private function validatePHPVersion()
     {
-        if (version_compare(phpversion(), '7.1.0', '<')) {
+        if (version_compare(phpversion(), '7.2.0', '<')) {
             $this->error(
-                'PHP v7.1.0 or newer is required.'
+                'PHP v7.2.0 or newer is required.'
             );
         }
     }

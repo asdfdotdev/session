@@ -13,6 +13,8 @@
  *  testSessionRegenerate           Regenerates session id
  *  testSessionFingerprint          Validates session fingerprint in different situations
  *  testExceptionThrow              Validates exception handling by class
+ *  testSessionDir                  Validates session directory without write access
+ *  testSessionDomain               Validates session domain mismatch
  */
 
 namespace Asdfdotdev;
@@ -379,4 +381,53 @@ class TestSession extends \PHPUnit\Framework\TestCase
 
         $this->assertGreaterThan(0, $ttl);
     }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testSessionDir()
+    {
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+
+        $testDirectory = '/tmp/asdf_session_test';
+
+        try {
+            if(!file_exists($testDirectory)) {
+                mkdir($testDirectory, 0555, false);
+            }
+            ini_set('session.save_path', '/tmp/asdf_session_test');
+            require '../src/Session.php';
+            $session = new Session(['debug' => true]);
+            $session->start();
+        } catch (\Exception $e) {
+            $this->assertEquals($e->getMessage(), 'Session directory is not writable.');
+        }
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testSessionDomain()
+    {
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+        $_SERVER['HTTP_HOST'] = 'somethingelse.tld';
+
+        try {
+            require '../src/Session.php';
+            $session = new Session(['debug' => true, 'domain' => 'nope.invalid']);
+            $session->start();
+        } catch (\Exception $e) {
+            $this->assertEquals(
+                $e->getMessage(),
+                sprintf(
+                    'Session cookie domain (%s) and request domain (%s) mismatch.',
+                    $_SERVER['HTTP_HOST'],
+                    'nope.invalid'
+                )
+            );
+        }
+    }
+
 }
