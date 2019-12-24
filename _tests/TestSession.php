@@ -389,17 +389,16 @@ class TestSession extends \PHPUnit\Framework\TestCase
     {
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
-        $_SERVER['HTTP_HOST'] = 'valid.tld';
 
-        $testDirectory = '/tmp/asdf_session_test';
+        $testDirectory = sprintf('%s/asdf_session_test', sys_get_temp_dir());
 
         try {
             if(!file_exists($testDirectory)) {
                 mkdir($testDirectory, 0555, false);
             }
-            ini_set('session.save_path', '/tmp/asdf_session_test');
+            ini_set('session.save_path', $testDirectory);
             require '../src/Session.php';
-            $session = new Session(['debug' => true, 'domain' => 'valid.tld']);
+            $session = new Session(['debug' => true]);
             $session->start();
         } catch (\Exception $e) {
             $this->assertEquals('Session directory is not writable.', $e->getMessage(),);
@@ -416,6 +415,7 @@ class TestSession extends \PHPUnit\Framework\TestCase
         $_SERVER['HTTP_HOST'] = 'somethingelse.tld';
 
         try {
+            ini_set('session.save_path', sys_get_temp_dir());
             require '../src/Session.php';
             $session = new Session(['debug' => true, 'domain' => 'nope.invalid']);
             $session->start();
