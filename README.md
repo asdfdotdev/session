@@ -4,28 +4,27 @@
 
 This class endeavors to make it easy to use better sessions in PHP scripts.
 
-* Easily set, increment, append, hash, and drop session values 
+* Easily set, increment, append, hash, and drop session values
 * Custom session naming
 * Simple session fingerprint check
 * Regenerate session id at random intervals
 * Change session id length & bits per character*
 * HTTPOnly session cookie
 * Decoy PHPSESSID cookie
-* Easy to create, manage, and destroy session values
 * Force session strict mode*
 * Force session use only cookies*
 * Force HTTPS only session cookies*
-* Supports PHP 7.1+
+* Supports PHP 7.2+
 
 <sup>\* Requires `ini_set()` method be enabled.</sup>
 
 ### Compatibility
 
-[![PHP Compatibility](https://img.shields.io/badge/PHP-7.1_to_7.3-%238892BF.svg?logo=php)](https://php.net/)
+[![PHP Compatibility](https://img.shields.io/badge/PHP-7.1_to_7.4-%238892BF.svg?logo=php)](https://php.net/)
 
 Session class is developed for and tested with recent PHP Version:
 
-- PHP 7.1, 7.2, and 7.3
+- PHP 7.2, 7.3, and 7.4
 
 
 ## Installation
@@ -46,14 +45,14 @@ Information regarding the included tests is available in the tests the [README](
 
 ## Standards
 
-This class follows both the [PSR-2](https://www.php-fig.org/psr/psr-2/) and [PSR-12](https://www.php-fig.org/psr/psr-12/) code standards.
+This class follows [PSR-12](https://www.php-fig.org/psr/psr-12/) code standards.
 
 ## Debugging
 
 By default basic checks are performed when creating a session:
 
 - **Session Lifespan:** Prevents min lifespan from being greater than max lifespan.
-- **System Timezone:** Confirms default timezone is configured for PHP, if not UTC is set. 
+- **System Timezone:** Confirms default timezone is configured for PHP, if not UTC is set.
 
 Additional optional debugging can be enabled in session settings:
 

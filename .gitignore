@@ -1,5 +1,7 @@
 **/.DS_Store
-.idea
 **/_tests/build/**/*
-vendor/
+**/.phpunit.result.cache
+**/clover.xml
+.idea/
 _dev/
+vendor/

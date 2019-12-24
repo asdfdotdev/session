@@ -13,6 +13,8 @@
  *  testSessionRegenerate           Regenerates session id
  *  testSessionFingerprint          Validates session fingerprint in different situations
  *  testExceptionThrow              Validates exception handling by class
+ *  testSessionDir                  Validates session directory without write access
+ *  testSessionDomain               Validates session domain mismatch
  */
 
 namespace Asdfdotdev;
@@ -40,14 +42,14 @@ class TestSession extends \PHPUnit\Framework\TestCase
         $this->assertLessThanOrEqual($session_max, $session_lifespan);
 
         // Verify default session name is in use
-        $this->assertEquals(session_name(), 'asdfdotdev');
+        $this->assertEquals('asdfdotdev', session_name());
 
         // Verify default session cookie settings
         $array_details = session_get_cookie_params();
-        $this->assertEquals($array_details['path'], '/');
-        $this->assertEquals($array_details['domain'], 'localhost');
-        $this->assertEquals($array_details['secure'], false);
-        $this->assertEquals($array_details['httponly'], true);
+        $this->assertEquals('/', $array_details['path']);
+        $this->assertEquals('localhost', $array_details['domain']);
+        $this->assertEquals(false, $array_details['secure']);
+        $this->assertEquals(true, $array_details['httponly']);
 
         // Verify decoy value is in session array (decoy cookie in use)
         $session_dump = $session->dump(2);
@@ -84,17 +86,17 @@ class TestSession extends \PHPUnit\Framework\TestCase
         $this->assertLessThanOrEqual($session_max, $session_lifespan);
 
         // Verify default session name is in use
-        $this->assertEquals(session_name(), 'TestSession');
+        $this->assertEquals('TestSession', session_name());
 
         // Verify default session cookie settings
         $array_details = session_get_cookie_params();
-        $this->assertEquals($array_details['path'], '/subdirectory');
-        $this->assertEquals($array_details['domain'], '.testing.edu');
-        $this->assertEquals($array_details['secure'], true);
-        $this->assertEquals($array_details['httponly'], true);
+        $this->assertEquals('/subdirectory', $array_details['path']);
+        $this->assertEquals('.testing.edu', $array_details['domain']);
+        $this->assertEquals(true, $array_details['secure']);
+        $this->assertEquals(true, $array_details['httponly']);
 
         // Verify hash has changed
-        $this->assertEquals($session->getHash(), 'sha512');
+        $this->assertEquals('sha512', $session->getHash());
 
         // Verify decoy value isn't in session array (no decoy cookie in use)
         $session_dump = $session->dump(2);
@@ -118,20 +120,20 @@ class TestSession extends \PHPUnit\Framework\TestCase
         $session->setValue('my_hashed_variable', 'this is the other value', true);
 
         // Verifiy creation of session values
-        $this->assertEquals($session->getValue('my_variable'), 'this is the value');
+        $this->assertEquals('this is the value', $session->getValue('my_variable'));
         $this->assertEquals(
-            $session->getValue('my_hashed_variable'),
             hash(
                 'sha256',
                 'this is the other value'
-            )
+            ),
+            $session->getValue('my_hashed_variable')
         );
 
         // Change session value
         $session->setValue('my_variable', 50);
 
         // Verifiy changed session value
-        $this->assertEquals($session->getValue('my_variable'), 50);
+        $this->assertEquals(50, $session->getValue('my_variable'));
     }
 
     /**
@@ -150,13 +152,13 @@ class TestSession extends \PHPUnit\Framework\TestCase
         $session->appValue('my_variable', 'this is the base value');
 
         // Verifiy creation of session value
-        $this->assertEquals($session->getValue('my_variable'), 'this is the base value');
+        $this->assertEquals('this is the base value', $session->getValue('my_variable'));
 
         // Append something to the value
         $session->appValue('my_variable', ' updated');
 
         // Verifiy changed session value
-        $this->assertEquals($session->getValue('my_variable'), 'this is the base value updated');
+        $this->assertEquals('this is the base value updated', $session->getValue('my_variable'));
     }
 
     /**
@@ -175,13 +177,13 @@ class TestSession extends \PHPUnit\Framework\TestCase
         $session->incValue('my_variable', 10);
 
         // Verifiy creation of session value
-        $this->assertEquals($session->getValue('my_variable'), 10);
+        $this->assertEquals(10, $session->getValue('my_variable'));
 
         // Append something to the value
         $session->incValue('my_variable', 5.5);
 
         // Verifiy changed session value
-        $this->assertEquals($session->getValue('my_variable'), 15.5);
+        $this->assertEquals(15.5, $session->getValue('my_variable'));
     }
 
     /**
@@ -200,7 +202,7 @@ class TestSession extends \PHPUnit\Framework\TestCase
         $session->setValue('my_variable', 'i exist');
 
         // Verifiy creation of session value
-        $this->assertEquals($session->getValue('my_variable'), 'i exist');
+        $this->assertEquals('i exist', $session->getValue('my_variable'));
 
         // Delete the value
         $session->dropValue('my_variable');
@@ -246,11 +248,11 @@ class TestSession extends \PHPUnit\Framework\TestCase
         $session->setValue('my_variable', 'this is the value');
 
         $this->assertEquals(
-            $session->getValue('fingerprint'),
             hash(
                 'sha256',
                 $_SERVER['HTTP_USER_AGENT'] . $_SERVER['REMOTE_ADDR'] . session_id()
-            )
+            ),
+            $session->getValue('fingerprint')
         );
 
         if (rand(0, 1) == 1) {
@@ -260,11 +262,11 @@ class TestSession extends \PHPUnit\Framework\TestCase
         }
 
         $this->assertNOTEquals(
-            $session->getValue('fingerprint'),
             hash(
                 'sha256',
                 $_SERVER['HTTP_USER_AGENT'] . $_SERVER['REMOTE_ADDR'] . session_id()
-            )
+            ),
+            $session->getValue('fingerprint')
         );
     }
 
@@ -281,7 +283,7 @@ class TestSession extends \PHPUnit\Framework\TestCase
         $session->start();
 
         $missing_value = $session->getValue('there_is_no_spoon');
-        $this->assertEquals($missing_value, null);
+        $this->assertEquals(null, $missing_value);
     }
 
     /**
@@ -299,7 +301,7 @@ class TestSession extends \PHPUnit\Framework\TestCase
             ]);
             $session->start();
         } catch (\Exception $e) {
-            $this->assertEquals($e->getMessage(), 'Server does not support selected hash algorithm selected.');
+            $this->assertEquals('Server does not support selected hash algorithm selected.', $e->getMessage());
         }
     }
 
@@ -318,7 +320,7 @@ class TestSession extends \PHPUnit\Framework\TestCase
             ]);
             $session->start();
         } catch (\Exception $e) {
-            $this->assertEquals($e->getMessage(), 'Session ID length invalid. Length must be between 22 to 256.');
+            $this->assertEquals('Session ID length invalid. Length must be between 22 to 256.', $e->getMessage());
         }
     }
 
@@ -337,7 +339,7 @@ class TestSession extends \PHPUnit\Framework\TestCase
             ]);
             $session->start();
         } catch (\Exception $e) {
-            $this->assertEquals($e->getMessage(), 'Session ID bits per character invalid. Options are 4, 5, or 6.');
+            $this->assertEquals('Session ID bits per character invalid. Options are 4, 5, or 6.', $e->getMessage());
         }
     }
 
@@ -356,7 +358,7 @@ class TestSession extends \PHPUnit\Framework\TestCase
 
             $session->incValue('should-not-work', 'this is not a numeric value');
         } catch (\Exception $e) {
-            $this->assertEquals($e->getMessage(), 'Only numeric values can be passed to Asdfdotdev\Session::incValue');
+            $this->assertEquals('Only numeric values can be passed to Asdfdotdev\Session::incValue', $e->getMessage());
         }
     }
 
@@ -379,4 +381,54 @@ class TestSession extends \PHPUnit\Framework\TestCase
 
         $this->assertGreaterThan(0, $ttl);
     }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testSessionDir()
+    {
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+
+        $testDirectory = sprintf('%s/asdf_session_test', sys_get_temp_dir());
+
+        try {
+            if(!file_exists($testDirectory)) {
+                mkdir($testDirectory, 0555, false);
+            }
+            ini_set('session.save_path', $testDirectory);
+            require '../src/Session.php';
+            $session = new Session(['debug' => true]);
+            $session->start();
+        } catch (\Exception $e) {
+            $this->assertEquals('Session directory is not writable.', $e->getMessage());
+        }
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testSessionDomain()
+    {
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+        $_SERVER['HTTP_HOST'] = 'somethingelse.tld';
+
+        try {
+            ini_set('session.save_path', sys_get_temp_dir());
+            require '../src/Session.php';
+            $session = new Session(['debug' => true, 'domain' => 'nope.invalid']);
+            $session->start();
+        } catch (\Exception $e) {
+            $this->assertEquals(
+                sprintf(
+                    'Session cookie domain (%s) and request domain (%s) mismatch.',
+                    $_SERVER['HTTP_HOST'],
+                    'nope.invalid'
+                ),
+                $e->getMessage()
+            );
+        }
+    }
+
 }
