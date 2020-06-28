@@ -17,13 +17,13 @@ PHP Code Sniffer v3.4+ is recommended.
 From the `_tests/` directory run `$ ../vendor/bin/phpunit` to run the tests. This should result in output similar to:
 
 ```
-PHPUnit 7.5.14 by Sebastian Bergmann and contributors.
+PHPUnit 8.5.8 by Sebastian Bergmann and contributors.
 
-..............                                                    14 / 14 (100%)
+................                                                  16 / 16 (100%)
 
-Time: 1.76 seconds, Memory: 6.00 MB
+Time: 2.25 seconds, Memory: 6.00 MB
 
-OK (14 tests, 39 assertions)
+OK (16 tests, 41 assertions)
 
-Generating code coverage report in Clover XML format ... done
+Generating code coverage report in Clover XML format ... done [53 ms]
 ```

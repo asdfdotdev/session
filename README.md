@@ -1,6 +1,6 @@
 # Session
 
-[![Build Status](https://travis-ci.org/asdfdotdev/session.svg?branch=master)](https://travis-ci.org/asdfdotdev/session) [![codecov](https://codecov.io/gh/asdfdotdev/session/branch/master/graph/badge.svg)](https://codecov.io/gh/asdfdotdev/session) [![Packagist](https://img.shields.io/packagist/dm/asdfdotdev/session)](https://packagist.org/packages/asdfdotdev/session)
+[![Build Status](https://travis-ci.org/asdfdotdev/session.svg?branch=main)](https://travis-ci.org/asdfdotdev/session) [![codecov](https://codecov.io/gh/asdfdotdev/session/branch/main/graph/badge.svg)](https://codecov.io/gh/asdfdotdev/session) [![Packagist](https://img.shields.io/packagist/dm/asdfdotdev/session)](https://packagist.org/packages/asdfdotdev/session)
 
 This class endeavors to make it easy to use better sessions in PHP scripts.
 

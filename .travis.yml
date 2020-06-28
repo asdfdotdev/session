@@ -2,12 +2,12 @@ language: php
 
 notifications:
   email:
-  on_success: never
-  on_failure: change
+    on_success: never
+    on_failure: change
 
 branches:
   only:
-  - master
+  - main
   - development
 
 cache:
