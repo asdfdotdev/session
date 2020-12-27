@@ -24,7 +24,7 @@
         "squizlabs/php_codesniffer": "^3.5",
         "phpcompatibility/php-compatibility": "^9.3",
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
-        "phpunit/phpunit": "^8"
+        "phpunit/phpunit": "^9"
     },
     "keywords": ["asdf", "session", "sessions"],
     "minimum-stability": "stable"

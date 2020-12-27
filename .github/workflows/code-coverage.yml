@@ -1,0 +1,54 @@
+name: Code Coverage
+
+on:
+  push:
+    branches:
+      - main
+      - development
+  pull_request:
+    branches:
+    types: [closed]
+  schedule:
+    - cron: '0 0 * * 0'
+
+jobs:
+  code-coverage:
+    name: PHP ${{ matrix.php-versions }} on ${{ matrix.operating-system }}
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        php-versions: [ '8.0' ]
+        operating-system: [ ubuntu-20.04 ]
+
+    steps:
+      - name: Setup PHP
+        # Commit hash for v2.9.0: https://github.com/shivammathur/setup-php/releases/tag/2.9.0
+        uses: shivammathur/setup-php@50980172517227701a2db688415a86573987b6df
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: mbstring
+          ini-values: post_max_size=256M, max_execution_time=180
+          coverage: xdebug
+
+      - name: Log Debug Information
+        run: |
+          echo "$GITHUB_REF"
+          echo "$GITHUB_EVENT_NAME"
+          php --version
+
+      - name: Checkout session
+        uses: actions/checkout@v2
+
+      - name: Install PHPUnit
+        run: |
+          composer require phpunit/phpunit:^9 --update-with-dependencies
+
+      - name: Generate Coverage Report
+        run: |
+          cd _tests
+          mkdir -p build/logs
+          ../vendor/bin/phpunit
+
+      - name: Upload coverage to Codecov
+        run: |
+          bash <(curl -s https://codecov.io/bash)
