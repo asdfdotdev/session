@@ -119,7 +119,7 @@ class TestSession extends \PHPUnit\Framework\TestCase
         $session->setValue('my_variable', 'this is the value');
         $session->setValue('my_hashed_variable', 'this is the other value', true);
 
-        // Verifiy creation of session values
+        // Verify creation of session values
         $this->assertEquals('this is the value', $session->getValue('my_variable'));
         $this->assertEquals(
             hash(
@@ -132,7 +132,7 @@ class TestSession extends \PHPUnit\Framework\TestCase
         // Change session value
         $session->setValue('my_variable', 50);
 
-        // Verifiy changed session value
+        // Verify changed session value
         $this->assertEquals(50, $session->getValue('my_variable'));
     }
 
@@ -151,13 +151,13 @@ class TestSession extends \PHPUnit\Framework\TestCase
         // Create a new session value
         $session->appValue('my_variable', 'this is the base value');
 
-        // Verifiy creation of session value
+        // Verify creation of session value
         $this->assertEquals('this is the base value', $session->getValue('my_variable'));
 
         // Append something to the value
         $session->appValue('my_variable', ' updated');
 
-        // Verifiy changed session value
+        // Verify changed session value
         $this->assertEquals('this is the base value updated', $session->getValue('my_variable'));
     }
 
@@ -176,13 +176,13 @@ class TestSession extends \PHPUnit\Framework\TestCase
         // Create a new session value
         $session->incValue('my_variable', 10);
 
-        // Verifiy creation of session value
+        // Verify creation of session value
         $this->assertEquals(10, $session->getValue('my_variable'));
 
         // Append something to the value
         $session->incValue('my_variable', 5.5);
 
-        // Verifiy changed session value
+        // Verify changed session value
         $this->assertEquals(15.5, $session->getValue('my_variable'));
     }
 
@@ -201,7 +201,7 @@ class TestSession extends \PHPUnit\Framework\TestCase
         // Create a new session string value
         $session->setValue('my_variable', 'i exist');
 
-        // Verifiy creation of session value
+        // Verify creation of session value
         $this->assertEquals('i exist', $session->getValue('my_variable'));
 
         // Delete the value
@@ -429,6 +429,61 @@ class TestSession extends \PHPUnit\Framework\TestCase
                 $e->getMessage()
             );
         }
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testSessionDumpFormat()
+    {
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+
+        require '../src/Session.php';
+        $session = new Session();
+        $session->start();
+
+        $random_value = sha1(rand(0, 1234567890));
+
+        // Create a new session string value
+        $session->setValue('my_variable', $random_value);
+
+        // Verify creation of session value
+        $this->assertEquals($random_value, $session->getValue('my_variable'));
+
+        // Verify dump format string
+        $this->assertEquals($session->dump(1), print_r($_SESSION, true));
+
+        // Verify dump format array
+        $this->assertEquals($session->dump(2), $_SESSION);
+
+        // Verify dump format json
+        $this->assertEquals($session->dump(3), json_encode($_SESSION));
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testSessionEnd()
+    {
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0';
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+
+        require '../src/Session.php';
+        $session = new Session();
+        $session->start();
+
+        $random_value = sha1(rand(0, 1234567890));
+
+        // Create a new session string value
+        $session->setValue('my_variable', $random_value);
+
+        // Verify creation of session value
+        $this->assertEquals($random_value, $session->getValue('my_variable'));
+
+        // Verify session end
+        $session->end();
+        $this->assertEquals($session->dump(2), []);
     }
 
 }
