@@ -1,6 +1,6 @@
 # Session
 
-[![Build Status](https://travis-ci.org/asdfdotdev/session.svg?branch=main)](https://travis-ci.org/asdfdotdev/session) [![codecov](https://codecov.io/gh/asdfdotdev/session/branch/main/graph/badge.svg)](https://codecov.io/gh/asdfdotdev/session) [![Packagist](https://img.shields.io/packagist/dm/asdfdotdev/session)](https://packagist.org/packages/asdfdotdev/session)
+![PHPUnit Tests (8.x)](https://github.com/asdfdotdev/session/workflows/PHPUnit%20Tests%20(8.x)/badge.svg) ![PHPUnit Tests (7.x)](https://github.com/asdfdotdev/session/workflows/PHPUnit%20Tests%20(7.x)/badge.svg) [![codecov](https://codecov.io/gh/asdfdotdev/session/branch/main/graph/badge.svg)](https://codecov.io/gh/asdfdotdev/session) [![Packagist](https://img.shields.io/packagist/dm/asdfdotdev/session)](https://packagist.org/packages/asdfdotdev/session)
 
 This class endeavors to make it easy to use better sessions in PHP scripts.
 
@@ -20,11 +20,11 @@ This class endeavors to make it easy to use better sessions in PHP scripts.
 
 ### Compatibility
 
-[![PHP Compatibility](https://img.shields.io/badge/PHP-7.2_to_7.4-%238892BF.svg?logo=php)](https://php.net/)
+[![PHP Compatibility](https://img.shields.io/badge/PHP-7.2_to_8.0-%238892BF.svg?logo=php)](https://php.net/)
 
 Session class is developed for and tested with recent PHP Version:
 
-- PHP 7.2, 7.3, and 7.4
+- PHP 7.2, 7.3, 7.4, and 8.0
 
 
 ## Installation

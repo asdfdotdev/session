@@ -1,6 +1,6 @@
 {
     "name": "asdfdotdev/session",
-    "version": "0.5.1",
+    "version": "0.6.0",
     "description": "The asdf_ session class endeavors to make it easier to use basic best practices in PHP sessions.",
     "type": "library",
     "license": "LGPL-2.1-only",
@@ -24,7 +24,7 @@
         "squizlabs/php_codesniffer": "^3.5",
         "phpcompatibility/php-compatibility": "^9.3",
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
-        "phpunit/phpunit": "^8"
+        "phpunit/phpunit": "^9"
     },
     "keywords": ["asdf", "session", "sessions"],
     "minimum-stability": "stable"

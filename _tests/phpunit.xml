@@ -1,21 +1,17 @@
-<phpunit
-    backupGlobals="false"
-    colors="true"
-    convertErrorsToExceptions="true"
-    convertNoticesToExceptions="true"
-    convertWarningsToExceptions="true"
->
-    <testsuites>
-        <testsuite name="all">
-            <directory prefix="Test" suffix=".php">./</directory>
-        </testsuite>
-    </testsuites>
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="false">
-            <directory suffix=".php">../src/</directory>
-        </whitelist>
-    </filter>
-    <logging>
-        <log type="coverage-clover" target="build/logs/clover.xml"/>
-    </logging>
+<?xml version="1.0"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="false" colors="true" convertErrorsToExceptions="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage processUncoveredFiles="false">
+    <include>
+      <directory suffix=".php">../src/</directory>
+    </include>
+    <report>
+      <clover outputFile="build/logs/clover.xml"/>
+    </report>
+  </coverage>
+  <testsuites>
+    <testsuite name="all">
+      <directory prefix="Test" suffix=".php">./</directory>
+    </testsuite>
+  </testsuites>
+  <logging/>
 </phpunit>
