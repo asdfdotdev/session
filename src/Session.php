@@ -14,9 +14,9 @@
  *
  * @package   Asdfdotdev
  * @author    Chris Carlevato <hello@asdf.dev>
- * @copyright 2015-2020 Chris Carlevato
+ * @copyright 2015-2021 Chris Carlevato
  * @license   http://www.gnu.org/licenses/lgpl-2.1.html
- * @version   0.5.0
+ * @version   0.6.0
  * @link      https://github.com/asdfdotdev/session
  */
 
