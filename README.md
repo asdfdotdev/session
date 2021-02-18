@@ -41,7 +41,7 @@ A number of usage examples are included in `_examples/`. Check out the examples 
 
 Information regarding the included tests is available in the tests the [README](./_test#readme).
 
-[Build history can be browsed at Travis-CI.](https://travis-ci.org/asdfdotdev/session)
+[Build history can be browsed at GitHub.](https://github.com/asdfdotdev/session/actions)
 
 ## Standards
 
