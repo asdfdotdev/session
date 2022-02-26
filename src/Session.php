@@ -14,9 +14,9 @@
  *
  * @package   Asdfdotdev
  * @author    Chris Carlevato <hello@asdf.dev>
- * @copyright 2015-2021 Chris Carlevato
+ * @copyright 2015-2022 Chris Carlevato
  * @license   http://www.gnu.org/licenses/lgpl-2.1.html
- * @version   0.6.0
+ * @version   0.7.0
  * @link      https://github.com/asdfdotdev/session
  */
 
@@ -739,7 +739,7 @@ class Session
      */
     protected function error($response)
     {
-        throw new \Exception($response, null, null);
+        throw new \Exception($response, 0, null);
     }
 
     /**

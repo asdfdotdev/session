@@ -20,11 +20,11 @@ This class endeavors to make it easy to use better sessions in PHP scripts.
 
 ### Compatibility
 
-[![PHP Compatibility](https://img.shields.io/badge/PHP-7.2_to_8.0-%238892BF.svg?logo=php)](https://php.net/)
+[![PHP Compatibility](https://img.shields.io/badge/PHP-7.2_to_8.1-%238892BF.svg?logo=php)](https://php.net/)
 
 Session class is developed for and tested with recent PHP Version:
 
-- PHP 7.2, 7.3, 7.4, and 8.0
+- PHP 7.2, 7.3, 7.4, 8.0, 8.1
 
 
 ## Installation
