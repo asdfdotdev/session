@@ -739,7 +739,7 @@ class Session
      */
     protected function error($response)
     {
-        throw new \Exception($response, null, null);
+        throw new \Exception($response, 0, null);
     }
 
     /**

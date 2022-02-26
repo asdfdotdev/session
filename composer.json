@@ -27,5 +27,10 @@
         "phpunit/phpunit": "^9"
     },
     "keywords": ["asdf", "session", "sessions"],
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
 }
